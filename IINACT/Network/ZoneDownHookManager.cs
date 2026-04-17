@@ -17,6 +17,7 @@ public unsafe class ZoneDownHookManager : IDisposable
     private const string OpcodeKeyTableSignature = "?? ?? ?? 2B C8 ?? 8B ?? 8A ?? ?? ?? ?? 41 81";
     private readonly int[] opcodeKeyTable;
     private readonly byte[] keys = new byte[3];
+    private readonly bool isTraditionalChinese;
     
     private readonly INotificationManager notificationManager;
 	private delegate nuint DownPrototype(byte* data, byte* a2, nuint a3, nuint a4, nuint a5);
@@ -38,11 +39,23 @@ public unsafe class ZoneDownHookManager : IDisposable
         var moduleBase = multiScanner.Module.BaseAddress;
         
         var version = GetRunningGameVersion();
-        var isGlobal = Machina.FFXIV.Headers.Opcodes.OpcodeManager.Instance.GameRegion == Machina.FFXIV.GameRegion.Global;
+        var gameRegion = Machina.FFXIV.Headers.Opcodes.OpcodeManager.Instance.GameRegion;
+        var isGlobal = gameRegion == Machina.FFXIV.GameRegion.Global;
+        isTraditionalChinese = gameRegion == Machina.FFXIV.GameRegion.TraditionalChinese;
+
         if (isGlobal && VersionConstants.Constants.ContainsKey(version))
         {
             versionConstants = VersionConstants.ForGameVersion(version);
             unscrambler = UnscramblerFactory.ForGameVersion(version);
+        }
+        else if (isTraditionalChinese)
+        {
+            // TC: key table is Key0/Key1/Key2 in PacketDispatcher (3 × int32 = 12 bytes).
+            // There is no static module-relative table; keys are updated dynamically each session.
+            Plugin.Log.Warning("[ZoneDownHookManager] TraditionalChinese region: using dynamic 3-entry key table from PacketDispatcher");
+            versionConstants = GetFallbackVersionConstant(0, 12);
+            unscrambler = new Unscrambler73();
+            unscrambler.Initialize(versionConstants);
         }
         else
         {
@@ -76,13 +89,22 @@ public unsafe class ZoneDownHookManager : IDisposable
             unscrambler = new Unscrambler73();
             unscrambler.Initialize(versionConstants);
         }
-        
-        var rawOpcodeKeyTable = new byte[versionConstants.OpcodeKeyTableSize];
-        opcodeKeyTable = new int[rawOpcodeKeyTable.Length / 4];
-        Marshal.Copy(moduleBase + (nint)versionConstants.OpcodeKeyTableOffset, rawOpcodeKeyTable, 0, rawOpcodeKeyTable.Length);
-        Plugin.Log.Debug("[ZoneDownHookManager] raw opcode key table {@Data} (length: {Length})", rawOpcodeKeyTable, rawOpcodeKeyTable.Length);
-        for (var i = 0; i < rawOpcodeKeyTable.Length; i += 4)
-            opcodeKeyTable[i / 4] = BitConverter.ToInt32(rawOpcodeKeyTable, i);
+
+        if (isTraditionalChinese)
+        {
+            // Initialized to zero; populated by UpdateKeys() once the dispatcher has valid keys.
+            opcodeKeyTable = new int[3];
+            Plugin.Log.Debug("[ZoneDownHookManager] TC: opcodeKeyTable will be populated from PacketDispatcher keys");
+        }
+        else
+        {
+            var rawOpcodeKeyTable = new byte[versionConstants.OpcodeKeyTableSize];
+            opcodeKeyTable = new int[rawOpcodeKeyTable.Length / 4];
+            Marshal.Copy(moduleBase + (nint)versionConstants.OpcodeKeyTableOffset, rawOpcodeKeyTable, 0, rawOpcodeKeyTable.Length);
+            Plugin.Log.Debug("[ZoneDownHookManager] raw opcode key table {@Data} (length: {Length})", rawOpcodeKeyTable, rawOpcodeKeyTable.Length);
+            for (var i = 0; i < rawOpcodeKeyTable.Length; i += 4)
+                opcodeKeyTable[i / 4] = BitConverter.ToInt32(rawOpcodeKeyTable, i);
+        }
 
         var rxPtrs = multiScanner.ScanText(GenericDownSignature, 3);
 		zoneDownHook = hooks.HookFromAddress<DownPrototype>(rxPtrs[2], ZoneDownDetour);
@@ -129,6 +151,13 @@ public unsafe class ZoneDownHookManager : IDisposable
                 keys[2] = key2;    
                 Plugin.Log.Debug($"[UpdateKeys] keys {dispatcher->Key0}, {dispatcher->Key1}, {dispatcher->Key2}");
                 Plugin.Log.Debug($"[UpdateKeys] game random {dispatcher->GameRandom}, packet random {dispatcher->LastPacketRandom}");
+                if (isTraditionalChinese)
+                {
+                    // TC uses Key0/Key1/Key2 directly as the 3-entry key table (opcode % 3 indexing).
+                    opcodeKeyTable[0] = key0;
+                    opcodeKeyTable[1] = key1;
+                    opcodeKeyTable[2] = key2;
+                }
             }
         }
         else

@@ -39,7 +39,7 @@ public sealed class Plugin : IDalamudPlugin
     private TextToSpeechProvider TextToSpeechProvider { get; }
     private MainWindow MainWindow { get; }
     internal FileDialogManager FileDialogManager { get; }
-    private ZoneDownHookManager ZoneDownHookManager { get; }
+    private ZoneDownHookManager? ZoneDownHookManager { get; }
     private IpcProviders IpcProviders { get; }
 
     private FfxivActPluginWrapper FfxivActPluginWrapper { get; }
@@ -73,9 +73,7 @@ public sealed class Plugin : IDalamudPlugin
         NotificationManager = notificationManager;
         Log = pluginLog;
 
-        OpcodeManager.Instance.SetRegion(DataManager.Language.ToString() == "ChineseSimplified"
-                                             ? GameRegion.Chinese
-                                             : GameRegion.Global);
+        OpcodeManager.Instance.SetRegion(GameRegion.TraditionalChinese);
 
         var createZoneDownHookManager = Task.Run(() 
             => new ZoneDownHookManager(NotificationManager, GameInteropProvider));
