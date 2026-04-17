@@ -2,7 +2,7 @@ name: IINACT build
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "tc/api12_net9" ]
 
 jobs:
   build:
@@ -22,7 +22,9 @@ jobs:
     - name: Download Dalamud
       shell: pwsh
       run: |
-        Invoke-WebRequest -Uri https://raw.githubusercontent.com/goatcorp/dalamud-distrib/d28d86f20e1e37158b218d22e8f2247951f21186/stg/latest.zip -OutFile latest.zip
+        $release = Invoke-RestMethod -Uri "https://api.github.com/repos/PlusoneChiang/Dalamud/releases/latest"
+        $url = ($release.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1).browser_download_url
+        Invoke-WebRequest -Uri $url -OutFile latest.zip
         Expand-Archive -Force latest.zip /tmp/dalamud
     - name: Build
       run: dotnet build -c release
@@ -46,8 +48,8 @@ jobs:
         }
         Write-Output "RELEASE_VERSION=$($build.AssemblyVersion)" >> $env:GITHUB_ENV
         $repo.AssemblyVersion = $repo.TestingAssemblyVersion = $build.AssemblyVersion
-        $repo.DownloadLinkInstall = 'https://github.com/marzent/IINACT/releases/download/v' + $repo.AssemblyVersion + '/IINACT.zip'
-        $repo.DownloadLinkTesting =  'https://github.com/marzent/IINACT/releases/download/v' + $repo.TestingAssemblyVersion + '/IINACT.zip'
+        $repo.DownloadLinkInstall = 'https://github.com/PlusoneChiang/IINACT/releases/download/v' + $repo.AssemblyVersion + '/IINACT.zip'
+        $repo.DownloadLinkTesting =  'https://github.com/PlusoneChiang/IINACT/releases/download/v' + $repo.TestingAssemblyVersion + '/IINACT.zip'
         $repo.DownloadLinkUpdate = $repo.DownloadLinkInstall
         $repo | ConvertTo-Json | % { "[`n" + $_ + "`n]" } | Set-Content 'repo.json'
     - name: Create Release
@@ -67,11 +69,11 @@ jobs:
       run: |
         git config --global user.name "Actions User"
         git config --global user.email "actions@github.com"
-        git fetch origin main
-        git checkout main
+        git fetch origin tc/api12_net9
+        git checkout tc/api12_net9
         git add repo.json
         git commit -m "[CI] updating repo.json for ${{ env.RELEASE_VERSION }}" || true
-        git push origin main   
+        git push origin tc/api12_net9   
     
     
 
