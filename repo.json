@@ -3,24 +3,24 @@
   "Author": "Usagi",
   "Name": "IINACT",
   "InternalName": "IINACT",
-  "AssemblyVersion": "2.10.1.0",
-  "TestingAssemblyVersion": "2.10.1.0",
-  "Description": "A plugin to run the FFXIV_ACT_Plugin in an ACT-like environment with a heavily modified port of Overlay Plugin for modern .NET",
+  "AssemblyVersion": "12.10.1.0",
+  "TestingAssemblyVersion": "12.10.1.0",
+  "Description": "A plugin to run the FFXIV_ACT_Plugin in an ACT-like environment with a heavily modified port of Overlay Plugin for modern .NET (TC build of API 12 and .Net 9)",
   "ApplicableVersion": "any",
-  "RepoUrl": "https://github.com/marzent/IINACT",
+  "RepoUrl": "https://github.com/plusonechiang/IINACT",
   "Tags": [
     "parsing",
     "plugin",
     "ACT"
   ],
-  "DalamudApiLevel": 14,
+  "DalamudApiLevel": 12,
   "LoadPriority": 0,
-  "IconUrl": "https://raw.githubusercontent.com/marzent/IINACT/master/images/icon.png",
+  "IconUrl": "https://raw.githubusercontent.com/plusonechiang/IINACT/master/images/icon.png",
   "Punchline": "A parsing plugin.",
   "IsHide": "False",
   "IsTestingExclusive": "False",
-  "DownloadLinkInstall": "https://github.com/marzent/IINACT/releases/download/v2.10.1.0/IINACT.zip",
-  "DownloadLinkTesting": "https://github.com/marzent/IINACT/releases/download/v2.10.1.0/IINACT.zip",
-  "DownloadLinkUpdate": "https://github.com/marzent/IINACT/releases/download/v2.10.1.0/IINACT.zip"
+  "DownloadLinkInstall": "https://github.com/plusonechiang/IINACT/releases/download/v12.10.1.0/IINACT.zip",
+  "DownloadLinkTesting": "https://github.com/plusonechiang/IINACT/releases/download/v12.10.1.0/IINACT.zip",
+  "DownloadLinkUpdate": "https://github.com/plusonechiang/IINACT/releases/download/v12.10.1.0/IINACT.zip"
 }
 ]

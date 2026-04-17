@@ -7,7 +7,7 @@ using RainbowMage.OverlayPlugin;
 using System.Net;
 using System.Net.Sockets;
 using System.Numerics;
-using Dalamud.Bindings.ImGui;
+using ImGuiNET;
 using Dalamud.Interface.Utility;
 using Dalamud.Interface.Utility.Raii;
 

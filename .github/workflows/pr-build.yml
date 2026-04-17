@@ -20,7 +20,7 @@ jobs:
     - name: Download Dalamud
       shell: pwsh
       run: |
-        Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
+        Invoke-WebRequest -Uri https://raw.githubusercontent.com/goatcorp/dalamud-distrib/d28d86f20e1e37158b218d22e8f2247951f21186/stg/latest.zip -OutFile latest.zip
         Expand-Archive -Force latest.zip /tmp/dalamud
     - name: Build
       run: dotnet build -c release
