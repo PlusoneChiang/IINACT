@@ -1,0 +1,21 @@
+{
+    "version": 2,
+    "overlays": [
+        {
+            "name": "Ember Overlay",
+            "uri": "https://goldenchrysus.github.io/ffxiv/ember-overlay/",
+            "plaintext_uri": "http://proxy.iinact.com/overlay/ember_overlay/",
+            "features": [
+                "host_port"
+            ]
+        },
+        {
+            "name": "Kagerou",
+            "uri": "https://plusonechiang.github.io/kagerou/overlay/",
+            "plaintext_uri": "http://proxy.iinact.com/overlay/kagerou/",
+            "features": [
+                "host_port"
+            ]
+        }
+    ]
+}

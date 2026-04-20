@@ -37,6 +37,34 @@ on a Linux, macOS or Windows machine with the [.NET 7 SDK](https://dotnet.micros
 
 You will need to be able to reference Dalamud as well, meaning having an install of [XL](https://github.com/goatcorp/FFXIVQuickLauncher) or [XOM](https://github.com/marzent/XIV-on-Mac) on Windows and macOS respectively. On Linux `DALAMUD_HOME` needs to be correctly set (for example `$HOME/.xlcore/dalamud/Hooks/dev`).
 
+## TC (Traditional Chinese) Server Fork
+
+This is a fork targeting the **FFXIV Traditional Chinese (TC) server**.
+
+### Changes from upstream
+
+- **Dalamud API**: Downgraded to API 12 / .NET 9 to match the TC server's Dalamud version
+- **Region**: Hardcoded to `GameRegion.TraditionalChinese`
+- **Language**: Mapped `ClientLanguage.TraditionalChinese` → `Language.TraditionalChinese`
+- **ZoneDownHookManager**: TC-specific packet key handling (bypasses signature scan unavailable in TC binary)
+- **Kagerou overlay**: Default overlay points to a TC-localized fork at [plusonechiang.github.io/kagerou](https://plusonechiang.github.io/kagerou/overlay/)
+
+### Version scheme
+
+`{major}.{api_version}.{runtime_version}.{build}`
+
+Example: `1.12.9.1` = major version 1, Dalamud API 12, .NET 9, build 1
+
+### How to build (TC fork)
+
+```
+git clone --recurse-submodules https://github.com/PlusoneChiang/IINACT.git
+cd IINACT
+dotnet build
+```
+
+Requires the TC version of [XIV-on-Mac (XOM)](https://github.com/marzent/XIV-on-Mac) or equivalent Dalamud API 12 installation.
+
 ## FAQ
 
 **Where are my logs?**
