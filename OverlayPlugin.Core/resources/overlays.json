@@ -8,6 +8,14 @@
             "features": [
                 "host_port"
             ]
+        },
+        {
+            "name": "Ember Overlay",
+            "uri": "https://goldenchrysus.github.io/ffxiv/ember-overlay/",
+            "plaintext_uri": "https://goldenchrysus.github.io/ffxiv/ember-overlay/",
+            "features": [
+                "host_port"
+            ]
         }
     ]
 }
