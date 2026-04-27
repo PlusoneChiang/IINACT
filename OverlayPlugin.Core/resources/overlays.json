@@ -16,6 +16,14 @@
             "features": [
                 "host_port"
             ]
+        },
+        {
+            "name": "ikagami",
+            "uri": "https://idyllshi.re/ikegami/",
+            "plaintext_uri": "https://idyllshi.re/ikegami/",
+            "features": [
+                "host_port"
+            ]
         }
     ]
 }
