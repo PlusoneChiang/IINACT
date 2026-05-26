@@ -85,7 +85,7 @@ public sealed class Plugin : IDalamudPlugin
         
         var fetchDeps =
             new FetchDependencies.FetchDependencies(Version, PluginInterface.AssemblyLocation.Directory!.FullName,
-                                                    DataManager.Language.ToString() == "ChineseSimplified", HttpClient);
+                                                    false, HttpClient); // TC branch always uses global CDN (iinact.com)
         
         fetchDeps.GetFfxivPlugin();
         
