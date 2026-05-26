@@ -6,10 +6,13 @@ namespace RainbowMage.OverlayPlugin.NetworkProcessors.PacketHelper
 {
     abstract class LineBaseCustomMachina<
         HeaderStruct_Global, PacketStruct_Global,
+        HeaderStruct_TC, PacketStruct_TC,
         HeaderStruct_CN, PacketStruct_CN,
         HeaderStruct_KR, PacketStruct_KR>
         where HeaderStruct_Global : struct, IHeaderStruct
         where PacketStruct_Global : struct, IPacketStruct
+        where HeaderStruct_TC : struct, IHeaderStruct
+        where PacketStruct_TC : struct, IPacketStruct
         where HeaderStruct_CN : struct, IHeaderStruct
         where PacketStruct_CN : struct, IPacketStruct
         where HeaderStruct_KR : struct, IHeaderStruct
@@ -20,6 +23,7 @@ namespace RainbowMage.OverlayPlugin.NetworkProcessors.PacketHelper
         protected readonly Func<string, DateTime, bool> logWriter;
         protected readonly RegionalizedPacketHelper<
         HeaderStruct_Global, PacketStruct_Global,
+        HeaderStruct_TC, PacketStruct_TC,
         HeaderStruct_CN, PacketStruct_CN,
         HeaderStruct_KR, PacketStruct_KR> packetHelper;
         protected GameRegion? currentRegion;
@@ -32,6 +36,7 @@ namespace RainbowMage.OverlayPlugin.NetworkProcessors.PacketHelper
 
             packetHelper = RegionalizedPacketHelper<
                 HeaderStruct_Global, PacketStruct_Global,
+                HeaderStruct_TC, PacketStruct_TC,
                 HeaderStruct_CN, PacketStruct_CN,
                 HeaderStruct_KR, PacketStruct_KR>.CreateFromMachina(machinaPacketName);
 
