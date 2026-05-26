@@ -162,8 +162,8 @@
         }
     },
     "TraditionalChinese": {
-        "2026.03.12.0000.0000": {
-            // Version: 7.05h, but client structs 7.2
+        "2026.05.15.0000.0000": {
+            // Version: update pending - MapEffect/NpcYell/Countdown/RSVData/CEDirector/BattleTalk2 opcodes TBD
             "CountdownCancel": {
                 "opcode": 359,
                 "size": 0
@@ -177,7 +177,7 @@
                 "size": 0
             },
             "ActorSetPos": {
-                "opcode": 853,
+                "opcode": 290,
                 "size": 0
             },
             "Countdown": {
@@ -193,7 +193,7 @@
                 "size": 0
             },
             "ActorMove": {
-                "opcode": 355,
+                "opcode": 633,
                 "size": 0
             },
             "CEDirector": {
