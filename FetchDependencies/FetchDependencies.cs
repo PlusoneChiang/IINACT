@@ -9,6 +9,9 @@ public class FetchDependencies
     private const string PluginUrlGlobal = "https://www.iinact.com/updater/download";
     private const string PluginUrlChinese = "https://cninact.diemoe.net/CN解析/FFXIV_ACT_Plugin.dll";
 
+    // Minimum compatible version: 3.x moved CombatantStruct to Models.Global namespace
+    private static readonly Version MinimumVersion = new Version(3, 0, 0, 0);
+
     private Version PluginVersion { get; }
     private string DependenciesDir { get; }
     private bool IsChinese { get; }
@@ -67,6 +70,10 @@ public class FetchDependencies
             using var plugin = new TargetAssembly(dllPath);
 
             if (!plugin.ApiVersionMatches())
+                return true;
+
+            // Force update if below minimum compatible version regardless of network status
+            if (plugin.Version < MinimumVersion)
                 return true;
             
             using var cancelAfterDelay = new CancellationTokenSource(TimeSpan.FromSeconds(3));
