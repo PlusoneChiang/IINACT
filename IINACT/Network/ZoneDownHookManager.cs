@@ -53,8 +53,8 @@ public unsafe class ZoneDownHookManager : IDisposable
             // TC: key table is Key0/Key1/Key2 in PacketDispatcher (3 × int32 = 12 bytes).
             // There is no static module-relative table; keys are updated dynamically each session.
             Plugin.Log.Warning("[ZoneDownHookManager] TraditionalChinese region: using dynamic 3-entry key table from PacketDispatcher");
-            versionConstants = GetFallbackVersionConstant(0, 12);
-            unscrambler = new Unscrambler73();
+            versionConstants = GetTraditionalChineseVersionConstants();
+            unscrambler = new Unscrambler72();
             unscrambler.Initialize(versionConstants);
         }
         else
@@ -274,6 +274,54 @@ public unsafe class ZoneDownHookManager : IDisposable
         var parent = Directory.GetParent(path)!.FullName;
         var ffxivVerFile = Path.Combine(parent, "ffxivgame.ver");
         return File.Exists(ffxivVerFile) ? File.ReadAllText(ffxivVerFile) : "0000.00.00.0000.0000";
+    }
+
+    private static VersionConstants GetTraditionalChineseVersionConstants()
+    {
+        var opcodes = Machina.FFXIV.Headers.Opcodes.OpcodeManager.Instance.CurrentOpcodes;
+        int GetOpcode(string key) => opcodes.TryGetValue(key, out var value) ? value : 0;
+
+        return new VersionConstants
+        {
+            GameVersion = GetRunningGameVersion(),
+            InitZoneOpcode = 0x227,
+            UnknownObfuscationInitOpcode = 0x0,
+            OpcodeKeyTableOffset = 0,
+            OpcodeKeyTableSize = 0,
+            TableOffsets = new[] { 0x2162570L, 0x21755F0L, 0x2179560L },
+            TableRadixes = new[] { 0xCB, 0x29, 0xE9 },
+            TableSizes = new[] { 96 * 0xCB, 99 * 0x29, 128 * 0xE9 },
+            MidTableOffset = 0x2162350,
+            MidTableSize = 0x44 * 8,
+            DayTableOffset = 0x2196760,
+            DayTableSize = (0xE + 1) * 4,
+            ObfuscatedOpcodes = new Dictionary<string, int>
+            {
+                { "PlayerSpawn", GetOpcode("PlayerSpawn") },
+                { "NpcSpawn", GetOpcode("NpcSpawn") },
+                { "NpcSpawn2", GetOpcode("NpcSpawn2") },
+
+                { "ActionEffect01", GetOpcode("Ability1") },
+                { "ActionEffect08", GetOpcode("Ability8") },
+                { "ActionEffect16", GetOpcode("Ability16") },
+                { "ActionEffect24", GetOpcode("Ability24") },
+                { "ActionEffect32", GetOpcode("Ability32") },
+                { "StatusEffectList", GetOpcode("StatusEffectList") },
+                { "StatusEffectList3", GetOpcode("StatusEffectList3") },
+
+                { "Examine", GetOpcode("Examine") },
+                { "UpdateGearset", GetOpcode("UpdateGearset") },
+                { "UpdateParty", GetOpcode("UpdateParty") },
+                { "ActorControl", GetOpcode("ActorControl") },
+                { "ActorCast", GetOpcode("ActorCast") },
+                { "ActorControlSelf", GetOpcode("ActorControlSelf") },
+
+                { "UnknownEffect01", 0x0 },
+                { "UnknownEffect16", 0x0 },
+                { "ActionEffect02", 0x0 },
+                { "ActionEffect04", 0x0 }
+            }
+        };
     }
     
     public static VersionConstants GetFallbackVersionConstant(uint opcodeKeyTableOffset, int opcodeKeyTableSize)
