@@ -162,7 +162,7 @@
         }
     },
     "TraditionalChinese": {
-        "2026.05.15.0000.0000": {
+        "2026.06.15.0000.0000": {
             // Version: update pending - MapEffect/NpcYell/Countdown/RSVData/CEDirector/BattleTalk2 opcodes TBD
             "CountdownCancel": {
                 "opcode": 359,
