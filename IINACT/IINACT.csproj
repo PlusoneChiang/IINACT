@@ -1,8 +1,8 @@
-﻿<Project Sdk="Dalamud.NET.Sdk/12.0.2">
+<Project Sdk="Dalamud.NET.Sdk/13.1.0">
     <PropertyGroup>
         <Authors>Usagi</Authors>
         <Company>Dezent</Company>
-        <Version>1.12.9.9</Version>
+        <Version>1.13.9.0</Version>
         <Description>A parsing plugin.</Description>
         <Copyright></Copyright>
         <PackageProjectUrl>https://github.com/marzent/IINACT</PackageProjectUrl>
@@ -21,6 +21,10 @@
         <LangVersion>latest</LangVersion>
         <CopyLocalLockFileAssemblies>true</CopyLocalLockFileAssemblies>
         <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+    </PropertyGroup>
+
+    <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))' and '$(DALAMUD_HOME)' == ''">
+        <DALAMUD_HOME Condition="Exists('$(HOME)/Library/Application Support/XIVTheCalamity/dalamud/hooks/dev/')">$(HOME)/Library/Application Support/XIVTheCalamity/dalamud/hooks/dev/</DALAMUD_HOME>
     </PropertyGroup>
 
     <ItemGroup>
