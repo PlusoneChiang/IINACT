@@ -32,11 +32,9 @@ jobs:
     - name: Pack
       shell: pwsh
       run: |
-        mkdir output
-        Copy-Item -Path "IINACT/bin/Release/win-x64/IINACT/*" -Destination "output/" -Recurse -Force
-        $build = Get-Content -Raw -Path output/IINACT.json | ConvertFrom-Json
+        $build = Get-Content -Raw -Path IINACT/bin/Release/win-x64/IINACT/IINACT.json | ConvertFrom-Json
         $repo = Get-Content -Raw -Path repo.json | ConvertFrom-Json | Select-Object -First 1
-        Compress-Archive -Path "output/*" -DestinationPath 'IINACT.zip'
+        Copy-Item -Path "IINACT/bin/Release/win-x64/IINACT/latest.zip" -Destination "IINACT.zip" -Force
         if (-not (Test-Path -Path "IINACT.zip")) {
             throw "File IINACT.zip does not exist."
         }
