@@ -20,7 +20,9 @@ jobs:
     - name: Download Dalamud
       shell: pwsh
       run: |
-        Invoke-WebRequest -Uri https://goatcorp.github.io/dalamud-distrib/stg/latest.zip -OutFile latest.zip
+        $release = Invoke-RestMethod -Uri "https://api.github.com/repos/PlusoneChiang/Dalamud/releases/latest"
+        $url = ($release.assets | Where-Object { $_.name -like "*.zip" } | Select-Object -First 1).browser_download_url
+        Invoke-WebRequest -Uri $url -OutFile latest.zip
         Expand-Archive -Force latest.zip /tmp/dalamud
     - name: Build
       run: dotnet build -c release

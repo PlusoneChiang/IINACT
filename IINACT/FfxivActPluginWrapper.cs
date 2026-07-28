@@ -2,9 +2,9 @@ using System.Globalization;
 using System.Runtime.InteropServices;
 using Advanced_Combat_Tracker;
 using Dalamud.Game;
-using Dalamud.Game.Chat;
 using Dalamud.Game.ClientState.Conditions;
 using Dalamud.Game.Text;
+using Dalamud.Game.Text.SeStringHandling;
 using Dalamud.Plugin.Services;
 using FFXIV_ACT_Plugin;
 using FFXIV_ACT_Plugin.Common;
@@ -210,19 +210,14 @@ public partial class FfxivActPluginWrapper : IDisposable
             throw new InvalidOperationException("Game offsets could not be found");
     }
 
-    private void OnChatMessage(IHandleableChatMessage message)
+    private void OnChatMessage(
+        XivChatType type, int senderId, ref SeString sender, ref SeString message, ref bool isHandled)
     {
-        var eventType = (uint)message.LogKind;
-        
-        if (message.LogKind == XivChatType.SystemMessage)
-        {
-            eventType |= ((uint)message.TargetKind << 7) | ((uint)message.SourceKind << 11);
-        }
-        
-        var player = message.Sender.TextValue;
-        var text = message.Message.TextValue.Replace('\r', ' ').Replace('\n', ' ')
-                                            .Replace('|', '❘');
-        var line = logFormat.FormatChatMessage(eventType, player, text);
+        var evenType = (uint)type;
+        var player = sender.TextValue;
+        var text = message.TextValue.Replace('\r', ' ').Replace('\n', ' ')
+                                    .Replace('|', '❘');
+        var line = logFormat.FormatChatMessage(evenType, player, text);
 
         logOutput.WriteLine(LogMessageType.ChatLog, GameServerTime.CurrentServerTime, line);
     }

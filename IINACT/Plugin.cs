@@ -73,9 +73,7 @@ public sealed class Plugin : IDalamudPlugin
         NotificationManager = notificationManager;
         Log = pluginLog;
 
-        OpcodeManager.Instance.SetRegion(DataManager.Language.ToString() == "ChineseSimplified"
-                                             ? GameRegion.Chinese
-                                             : GameRegion.Global);
+        OpcodeManager.Instance.SetRegion(GameRegion.TraditionalChinese);
 
         var createZoneDownHookManager = Task.Run(() 
             => new ZoneDownHookManager(NotificationManager, GameInteropProvider));
@@ -87,7 +85,7 @@ public sealed class Plugin : IDalamudPlugin
         
         var fetchDeps =
             new FetchDependencies.FetchDependencies(Version, PluginInterface.AssemblyLocation.Directory!.FullName,
-                                                    DataManager.Language.ToString() == "ChineseSimplified", HttpClient);
+                                                    false, HttpClient);
         
         fetchDeps.GetFfxivPlugin();
         
