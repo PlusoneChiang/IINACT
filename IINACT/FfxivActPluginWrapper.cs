@@ -1,4 +1,5 @@
 using System.Globalization;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Advanced_Combat_Tracker;
 using Dalamud.Game;
@@ -170,7 +171,7 @@ public partial class FfxivActPluginWrapper : IDisposable
         DataCollectionSettings = new DataCollectionSettingsEventArgs
         {
             LogFileFolder = ActGlobals.oFormActMain.LogFilePath,
-            RegionID = Region.Global,
+            RegionID = Region.TraditionalChinese,
             ProcessID = Environment.ProcessId
         };
         settingsMediator.DataCollectionSettings = DataCollectionSettings;

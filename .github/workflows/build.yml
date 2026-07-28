@@ -1,8 +1,7 @@
-name: IINACT build
+name: IINACT-TC build & release 
 
 on:
-  push:
-    branches: [ "tc/api13_net9" ]
+  workflow_dispatch:
 
 jobs:
   build:
