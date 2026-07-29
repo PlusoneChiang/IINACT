@@ -53,18 +53,18 @@ public class MainWindow : Window, IDisposable
 
     private void DrawMainWindow()
     {
-        using var tab = ImRaii.TabItem("Status");
+        using var tab = ImRaii.TabItem("狀態###Status");
         if (!tab) return;
 
         ImGui.Spacing();
-        ImGui.TextColored(ImGuiColors.DalamudGrey, "OverlayPlugin Status:");
+        ImGui.TextColored(ImGuiColors.DalamudGrey, "OverlayPlugin 狀態：");
         ImGuiHelpers.ScaledRelativeSameLine(155);
         ImGui.Text(Plugin.OverlayPluginStatus);
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
 
-        ImGui.TextColored(ImGuiColors.DalamudGrey, "Overlay URI generator:");
+        ImGui.TextColored(ImGuiColors.DalamudGrey, "懸浮窗 URI 產生器：");
 
         var comboWidth = ImGui.GetWindowWidth() * 0.8f;
         
@@ -76,7 +76,7 @@ public class MainWindow : Window, IDisposable
                     selectedOverlayIndex = i;
         
         ImGui.SetNextItemWidth(comboWidth);
-        if (ImGui.BeginCombo("Overlay", selectedOverlayName))
+        if (ImGui.BeginCombo("懸浮窗###Overlay", selectedOverlayName))
         {
             for (var i = 0; i < OverlayNames?.Length; i++)
             {
@@ -95,62 +95,62 @@ public class MainWindow : Window, IDisposable
         var selectedOverlay = OverlayPresets?[selectedOverlayIndex];
         Uri.TryCreate($"ws://{Server?.Address}:{Server?.Port}/ws", UriKind.Absolute, out var webSocketServer);
         var overlayUri = selectedOverlay?.ToOverlayUri(webSocketServer);
-        var overlayUriString = overlayUri?.ToString() ?? "<Error generating URI>";
+        var overlayUriString = overlayUri?.ToString() ?? "<無法產生 URI>";
 
         ImGui.SetNextItemWidth(comboWidth);
-        ImGui.InputText("URI", ref overlayUriString, 1000, ImGuiInputTextFlags.ReadOnly);
+        ImGui.InputText("URI###OverlayURI", ref overlayUriString, 1000, ImGuiInputTextFlags.ReadOnly);
 
         ImGui.Spacing();
         ImGui.Separator();
         ImGui.Spacing();
-        var serverStatus = Server is null ? "Initializing..." : "Stopped";
+        var serverStatus = Server is null ? "正在初始化……" : "已停止";
 
         if (Server?.Running ?? false)
-            serverStatus = $"Listening on {Server?.Address}:{Server?.Port}";
+            serverStatus = $"正在監聽 {Server?.Address}:{Server?.Port}";
 
         if (Server?.Failed ?? false)
         {
-            serverStatus = Server.LastException?.Message ?? "Failed";
+            serverStatus = Server.LastException?.Message ?? "啟動失敗";
             if (Server.LastException is SocketException { ErrorCode: 10048 })
-                serverStatus = $"Port {Server?.Port} is already in use";
+                serverStatus = $"連接埠 {Server?.Port} 已被占用";
         }
 
-        ImGui.TextColored(ImGuiColors.DalamudGrey, $"WebSocket Server:");
+        ImGui.TextColored(ImGuiColors.DalamudGrey, "WebSocket 伺服器：");
         ImGuiHelpers.ScaledRelativeSameLine(155);
         ImGui.Text(serverStatus);
         ImGui.GetWindowDpiScale();
 
         if (Server?.Running ?? false)
         {
-            if (ImGui.Button("Stop"))
+            if (ImGui.Button("停止###Stop"))
                 Server.Stop();
 
             ImGui.SameLine();
 
-            if (ImGui.Button("Restart"))
+            if (ImGui.Button("重新啟動###Restart"))
                 Server.Restart();
         }
         else if (Server is not null)
         {
-            if (ImGui.Button("Start"))
+            if (ImGui.Button("啟動###Start"))
                 Server.Start();
         }
     }
 
      private void DrawParseSettings()
     {
-        using var tab = ImRaii.TabItem("Parser");
+        using var tab = ImRaii.TabItem("解析器###Parser");
         if (!tab) return;
 
         ImGui.Spacing();
         var elementWidth = ImGui.GetWindowWidth() - (150 * ImGuiHelpers.GlobalScale);
         var logFilePath = Plugin.Configuration.LogFilePath;
         ImGui.SetNextItemWidth(elementWidth);
-        ImGui.InputText("Log File Path", ref logFilePath, 200, ImGuiInputTextFlags.ReadOnly);
+        ImGui.InputText("記錄檔路徑###Log File Path", ref logFilePath, 200, ImGuiInputTextFlags.ReadOnly);
         ImGui.SameLine();
         if (ImGuiComponents.DisabledButton(FontAwesomeIcon.Folder))
         {
-            Plugin.FileDialogManager.OpenFolderDialog("Pick a folder to save logs to", (success, path) =>
+            Plugin.FileDialogManager.OpenFolderDialog("選擇記錄檔儲存資料夾", (success, path) =>
             {
                 if (!success) return;
                 Plugin.Configuration.LogFilePath = path;
@@ -159,7 +159,7 @@ public class MainWindow : Window, IDisposable
         }
         ImGui.Spacing();
         ImGui.SetNextItemWidth(elementWidth);
-        if (ImGui.BeginCombo("Parse Filter",
+        if (ImGui.BeginCombo("解析篩選###Parse Filter",
                              Enum.GetName(typeof(ParseFilterMode), Plugin.Configuration.ParseFilterMode)))
         {
             foreach (var filter in Enum.GetValues<ParseFilterMode>())
@@ -176,14 +176,14 @@ public class MainWindow : Window, IDisposable
         ImGui.Spacing();
         
         var writeLogFile = Plugin.Configuration.WriteLogFile;
-        if (ImGui.Checkbox("Write out network log file", ref writeLogFile))
+        if (ImGui.Checkbox("寫入網路記錄檔###Write out network log file", ref writeLogFile))
         {
             Plugin.Configuration.WriteLogFile = writeLogFile;
             Plugin.Configuration.Save();
         }
 
         var disablePvp = Plugin.Configuration.DisablePvp;
-        if (ImGui.Checkbox("Disable writing out network log file in PvP", ref disablePvp))
+        if (ImGui.Checkbox("在 PvP 中停用網路記錄檔寫入###Disable writing out network log file in PvP", ref disablePvp))
         {
             if (Plugin.ClientState.IsPvP && disablePvp) Plugin.Configuration.DisableWritingPvpLogFile = true;
 
@@ -192,7 +192,7 @@ public class MainWindow : Window, IDisposable
         }
 
         var logChatMessages = Plugin.Configuration.LogChatMessages;
-        if (ImGui.Checkbox("Include chat and echo messages in log files", ref logChatMessages))
+        if (ImGui.Checkbox("在記錄檔中包含聊天與回音訊息###Include chat and echo messages in log files", ref logChatMessages))
         {
             Plugin.Configuration.LogChatMessages = logChatMessages;
             Plugin.SetChatMessageLoggingEnabled(logChatMessages);
@@ -200,7 +200,7 @@ public class MainWindow : Window, IDisposable
         }
 
         var autoDeleteNetworkLogs = Plugin.Configuration.AutoDeleteNetworkLogs;
-        if (ImGui.Checkbox("Automatically delete old network log files", ref autoDeleteNetworkLogs))
+        if (ImGui.Checkbox("自動刪除舊的網路記錄檔###Automatically delete old network log files", ref autoDeleteNetworkLogs))
         {
             Plugin.Configuration.AutoDeleteNetworkLogs = autoDeleteNetworkLogs;
             Plugin.Configuration.Save();
@@ -209,10 +209,10 @@ public class MainWindow : Window, IDisposable
         if (autoDeleteNetworkLogs)
         {
             var networkLogRetentionDays = Plugin.Configuration.NetworkLogRetentionDays;
-            ImGui.Text("Delete logs older than");
+            ImGui.Text("刪除早於下列天數的記錄檔");
             ImGui.SameLine();
             ImGui.SetNextItemWidth(30 * ImGuiHelpers.GlobalScale);
-            if (ImGui.InputInt("days", ref networkLogRetentionDays))
+            if (ImGui.InputInt("天###days", ref networkLogRetentionDays))
             {
                 Plugin.Configuration.NetworkLogRetentionDays = Math.Clamp(networkLogRetentionDays, 1, 3650);
                 Plugin.Configuration.Save();
@@ -220,21 +220,21 @@ public class MainWindow : Window, IDisposable
         }
 
         var disableDamageShield = Plugin.Configuration.DisableDamageShield;
-        if (ImGui.Checkbox("Disable Damage Shield Estimates", ref disableDamageShield))
+        if (ImGui.Checkbox("停用傷害護盾估算###Disable Damage Shield Estimates", ref disableDamageShield))
         {
             Plugin.Configuration.DisableDamageShield = disableDamageShield;
             Plugin.Configuration.Save();
         }
 
         var disableCombinePets = Plugin.Configuration.DisableCombinePets;
-        if (ImGui.Checkbox("Disable Combine Pets with Owners", ref disableCombinePets))
+        if (ImGui.Checkbox("停用將寵物傷害合併至主人###Disable Combine Pets with Owners", ref disableCombinePets))
         {
             Plugin.Configuration.DisableCombinePets = disableCombinePets;
             Plugin.Configuration.Save();
         }
 
         var endEncounterOutOfCombat = OverlayPluginEventConfig?.EndEncounterOutOfCombat ?? true;
-        if (ImGui.Checkbox("End encounter automatically after leaving combat", ref endEncounterOutOfCombat))
+        if (ImGui.Checkbox("離開戰鬥後自動結束遭遇戰###End encounter automatically after leaving combat", ref endEncounterOutOfCombat))
         {
             if (OverlayPluginEventConfig is not null)
             {
@@ -248,7 +248,7 @@ public class MainWindow : Window, IDisposable
         }
 
         var showDebug = Plugin.Configuration.ShowDebug;
-        if (ImGui.Checkbox("Show Debug Options", ref showDebug))
+        if (ImGui.Checkbox("顯示偵錯選項###Show Debug Options", ref showDebug))
         {
             Plugin.Configuration.ShowDebug = showDebug;
             Plugin.Configuration.Save();
@@ -260,7 +260,7 @@ public class MainWindow : Window, IDisposable
 
         var playerCharacterName = Plugin.Configuration.PlayerCharacterName;
         ImGui.SetNextItemWidth(elementWidth);
-        if (ImGui.InputText("Player name", ref playerCharacterName, 100))
+        if (ImGui.InputText("玩家名稱###Player name", ref playerCharacterName, 100))
         {
             Plugin.Configuration.PlayerCharacterName = playerCharacterName;
             Plugin.Configuration.Save();
@@ -273,14 +273,14 @@ public class MainWindow : Window, IDisposable
         ImGui.Spacing();
 
         var simulateIndividualDoTCrits = Plugin.Configuration.SimulateIndividualDoTCrits;
-        if (ImGui.Checkbox("Simulate Individual DoT Crits", ref simulateIndividualDoTCrits))
+        if (ImGui.Checkbox("模擬每次持續傷害暴擊###Simulate Individual DoT Crits", ref simulateIndividualDoTCrits))
         {
             Plugin.Configuration.SimulateIndividualDoTCrits = simulateIndividualDoTCrits;
             Plugin.Configuration.Save();
         }
 
         var showRealDoTTicks = Plugin.Configuration.ShowRealDoTTicks;
-        if (ImGui.Checkbox("Also Show 'Real' DoT Ticks", ref showRealDoTTicks))
+        if (ImGui.Checkbox("同時顯示「實際」持續傷害跳數###Also Show 'Real' DoT Ticks", ref showRealDoTTicks))
         {
             Plugin.Configuration.ShowRealDoTTicks = showRealDoTTicks;
             Plugin.Configuration.Save();
@@ -289,15 +289,15 @@ public class MainWindow : Window, IDisposable
 
     private void DrawTtsSettings()
     {
-        using var tab = ImRaii.TabItem("Text to Speech");
+        using var tab = ImRaii.TabItem("文字轉語音###Text to Speech");
         if (!tab) return;
         
         ImGui.Spacing();
-        ImGui.TextColored(ImGuiColors.DalamudGrey, "Google TTS:");
+        ImGui.TextColored(ImGuiColors.DalamudGrey, "Google 文字轉語音：");
         ImGui.Spacing();
 
         var forceGoogleTts = Plugin.Configuration.ForceGoogleTts;
-        if (ImGui.Checkbox("Force Google TTS instead of SAPI", ref forceGoogleTts))
+        if (ImGui.Checkbox("強制使用 Google TTS 而非 SAPI###Force Google TTS instead of SAPI", ref forceGoogleTts))
         {
             Plugin.Configuration.ForceGoogleTts = forceGoogleTts;
             Plugin.Configuration.Save();
@@ -307,7 +307,7 @@ public class MainWindow : Window, IDisposable
 
         var googleTtsLanguage = Plugin.Configuration.GoogleTtsLanguage;
         ImGui.SetNextItemWidth(100 * ImGuiHelpers.GlobalScale);
-        if (ImGui.InputText("Language", ref googleTtsLanguage, 10))
+        if (ImGui.InputText("語言###Language", ref googleTtsLanguage, 10))
         {
             Plugin.Configuration.GoogleTtsLanguage = googleTtsLanguage;
             Plugin.Configuration.Save();
@@ -318,13 +318,13 @@ public class MainWindow : Window, IDisposable
 
         var ttsDeviceCount = WaveOut.DeviceCount;
         var currentDevice = Plugin.Configuration.TtsPlaybackDevice;
-        var currentDeviceName = currentDevice == -1 ? "Default" : WaveOut.GetCapabilities(currentDevice).ProductName;
+        var currentDeviceName = currentDevice == -1 ? "預設" : WaveOut.GetCapabilities(currentDevice).ProductName;
         
         ImGui.SetNextItemWidth(200 * ImGuiHelpers.GlobalScale);
 
-        if (ImGui.BeginCombo("Playback Device", currentDeviceName))
+        if (ImGui.BeginCombo("播放裝置###Playback Device", currentDeviceName))
         {
-            if (ImGui.Selectable("Default", currentDevice == -1))
+            if (ImGui.Selectable("預設###Default", currentDevice == -1))
             {
                 Plugin.Configuration.TtsPlaybackDevice = -1;
                 Plugin.Configuration.Save();
@@ -346,7 +346,7 @@ public class MainWindow : Window, IDisposable
 
     private void DrawWebSocketSettings()
     {
-        using var tab = ImRaii.TabItem("WebSocket Server");
+        using var tab = ImRaii.TabItem("WebSocket 伺服器###WebSocket Server");
         if (!tab) return;
         
         ImGui.Spacing();
@@ -365,7 +365,7 @@ public class MainWindow : Window, IDisposable
         }
 
         var wsServerPort = OverlayPluginConfig?.WSServerPort.ToString() ?? "";
-        ImGui.InputText("Port", ref wsServerPort, 100, ImGuiInputTextFlags.None);
+        ImGui.InputText("連接埠###Port", ref wsServerPort, 100, ImGuiInputTextFlags.None);
 
         if (int.TryParse(wsServerPort, out var port))
         {

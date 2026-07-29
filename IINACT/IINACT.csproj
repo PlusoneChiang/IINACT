@@ -3,7 +3,7 @@
         <Authors>Usagi</Authors>
         <Company>Dezent</Company>
         <Version>1.13.9.2</Version>
-        <Description>A parsing plugin.</Description>
+        <Description>在遊戲內提供 ACT 相容的戰鬥資料解析環境。</Description>
         <Copyright></Copyright>
         <PackageProjectUrl>https://github.com/marzent/IINACT</PackageProjectUrl>
     </PropertyGroup>
