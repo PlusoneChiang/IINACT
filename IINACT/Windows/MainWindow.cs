@@ -40,6 +40,16 @@ public class MainWindow : Window, IDisposable
 
     public void Dispose() { }
 
+    private static string ParseFilterName(ParseFilterMode filter)
+        => filter switch
+        {
+            ParseFilterMode.None => "無",
+            ParseFilterMode.Self => "僅自己",
+            ParseFilterMode.Party => "僅小隊成員",
+            ParseFilterMode.Alliance => "僅團隊成員",
+            _ => filter.ToString(),
+        };
+
     public override void Draw()
     {
         using var bar = ImRaii.TabBar("settingsTabs");
@@ -160,10 +170,10 @@ public class MainWindow : Window, IDisposable
         ImGui.Spacing();
         ImGui.SetNextItemWidth(elementWidth);
         if (ImGui.BeginCombo("解析篩選###Parse Filter",
-                             Enum.GetName(typeof(ParseFilterMode), Plugin.Configuration.ParseFilterMode)))
+                             ParseFilterName((ParseFilterMode)Plugin.Configuration.ParseFilterMode)))
         {
             foreach (var filter in Enum.GetValues<ParseFilterMode>())
-                if (ImGui.Selectable(Enum.GetName(typeof(ParseFilterMode), filter),
+                if (ImGui.Selectable($"{ParseFilterName(filter)}###{filter}",
                                      (ParseFilterMode)Plugin.Configuration.ParseFilterMode == filter))
                 {
                     Plugin.Configuration.ParseFilterMode = (int)filter;
