@@ -113,12 +113,12 @@ public sealed class Plugin : IDalamudPlugin
 
         CommandManager.AddHandler(MainWindowCommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Displays the IINACT main window"
+            HelpMessage = "顯示 IINACT 主視窗。"
         });
 
         CommandManager.AddHandler(EndEncCommandName, new CommandInfo(OnCommand)
         {
-            HelpMessage = "Ends the current encounter IINACT is parsing"
+            HelpMessage = "結束 IINACT 正在解析的當前戰鬥。"
         });
 
         PluginInterface.UiBuilder.Draw += DrawUI;

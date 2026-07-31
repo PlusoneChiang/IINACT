@@ -26,6 +26,7 @@
     <PropertyGroup Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::IsOSPlatform($([System.Runtime.InteropServices.OSPlatform]::OSX)))'">
         <DalamudLibPath Condition="Exists('$(HOME)/Library/Application Support/XIVTheCalamity/dalamud/hooks/dev/')">$(HOME)/Library/Application Support/XIVTheCalamity/dalamud/hooks/dev/</DalamudLibPath>
         <DalamudLibPath Condition="'$(DalamudLibPath)' == ''">$(HOME)/Library/Application Support/XIV on Mac/dalamud/Hooks/dev/</DalamudLibPath>
+        <AssemblySearchPaths>$(AssemblySearchPaths);$(DalamudLibPath)</AssemblySearchPaths>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(DALAMUD_HOME)' != ''">

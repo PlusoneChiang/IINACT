@@ -16,7 +16,7 @@
   "DalamudApiLevel": 13,
   "LoadPriority": 0,
   "IconUrl": "https://raw.githubusercontent.com/PlusoneChiang/IINACT/master/images/icon.png",
-  "Punchline": "A parsing plugin.",
+  "Punchline": "在遊戲內使用 ACT 戰鬥解析功能。",
   "IsHide": "False",
   "IsTestingExclusive": "False",
   "DownloadLinkInstall": "https://github.com/PlusoneChiang/IINACT/releases/download/v1.13.9.6/IINACT.zip",
