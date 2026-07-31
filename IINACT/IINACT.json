@@ -2,7 +2,7 @@
     "Author": "Usagi",
     "Name": "IINACT",
     "Punchline": "在遊戲內使用 ACT 戰鬥解析功能。",
-    "RepoUrl": "https://plusonechiang.github.io/IINACT/repo.json",
+    "RepoUrl": "https://plusonechiang.github.io/IINACT/",
     "Description": "在類似 ACT 的環境中執行 FFXIV_ACT_Plugin，並提供適用於現代 .NET 的 Overlay Plugin 功能。",
     "InternalName": "IINACT",
     "ApplicableVersion": "2026.07.22.0000.0000",
