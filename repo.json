@@ -5,7 +5,7 @@
   "InternalName": "IINACT",
   "AssemblyVersion": "1.13.9.6",
   "TestingAssemblyVersion": "1.13.9.6",
-  "Description": "A plugin to run the FFXIV_ACT_Plugin in an ACT-like environment with a heavily modified port of Overlay Plugin for modern .NET (TC build of API 13 and .Net 9)",
+  "Description": "適用於TC服，讓FFXIV_ACT_Plugin 在類似 ACT 的環境中運行，並提供適用於現代 .NET 的 Overlay Plugin 功能 (使用Dalamud API Level 13與 .NET 9編譯)",
   "ApplicableVersion": "2026.07.22.0000.0000",
   "RepoUrl": "https://github.com/PlusoneChiang/IINACT",
   "Tags": [
